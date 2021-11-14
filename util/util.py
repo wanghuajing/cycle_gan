@@ -6,7 +6,7 @@ from PIL import Image
 import os
 
 
-def tensor2im(input_image, imtype=np.uint16):
+def tensor2im(input_image, label, imtype=np.uint16):
     """"Converts a Tensor array into a numpy image array.
 
     Parameters:
@@ -23,7 +23,20 @@ def tensor2im(input_image, imtype=np.uint16):
         #     image_numpy = np.tile(image_numpy, (3, 1, 1))
         # image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0  # post-processing: tranpose and scaling
         # 16位的图均值和方差改变
-        image_numpy = (image_numpy[0, :, :] * 0.182379 + 0.304032) * 65535.0
+        A = ['real_A', 'rec_A', 'fake_A', 'idt_A']
+        B = ['real_B', 'rec_B', 'fake_B', 'idt_B']
+
+        # 标准化
+        # if label in A:
+        #     image_numpy = (image_numpy[0, :, :] * 0.130789 + 0.402942) * 65535.0
+        # elif label in B:
+        #     image_numpy = (image_numpy[0, :, :] * 0.182379 + 0.304032) * 65535.0
+        # else:
+        #     raise Exception('get wrong label!')
+
+        # 未标准化
+        image_numpy = (image_numpy[0, :, :] * 0.5 + 0.5) * 65535.0
+
     else:  # if it is a numpy array, do nothing
         image_numpy = input_image
     return image_numpy.astype(imtype)

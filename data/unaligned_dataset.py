@@ -67,8 +67,11 @@ class UnalignedDataset(BaseDataset):
         B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
         A = A.unsqueeze(0)
         B = B.unsqueeze(0)
-        A = (A - 0.402942) / 0.130789
-        B = (B - 0.304032) / 0.182379
+        # 将A,B数据集分别标准化
+        # A = (A - 0.402942) / 0.130789
+        # B = (B - 0.304032) / 0.182379
+        A = (A - 0.5) / 0.5
+        B = (B - 0.5) / 0.5
 
         return {'A': A, 'B': B, 'A_paths': A_path, 'B_paths': B_path}
 

@@ -6,7 +6,6 @@ import time
 from . import util, html
 from subprocess import Popen, PIPE
 
-
 if sys.version_info[0] == 2:
     VisdomExceptionBase = Exception
 else:
@@ -33,7 +32,7 @@ def save_images(webpage, visuals, image_path, aspect_ratio=1.0, width=256):
     ims, txts, links = [], [], []
 
     for label, im_data in visuals.items():
-        im = util.tensor2im(im_data)
+        im = util.tensor2im(im_data,label)
         image_name = '%s_%s.png' % (name, label)
         save_path = os.path.join(image_dir, image_name)
         util.save_image(im, save_path, aspect_ratio=aspect_ratio)
@@ -105,7 +104,7 @@ class Visualizer():
         """
         if self.display_id > 0:  # show images in the browser using visdom
             ncols = self.ncols
-            if ncols > 0:        # show all the images in one visdom panel
+            if ncols > 0:  # show all the images in one visdom panel
                 ncols = min(ncols, len(visuals))
                 h, w = next(iter(visuals.values())).shape[:2]
                 table_css = """<style>
@@ -146,7 +145,7 @@ class Visualizer():
             #     idx = 1
             #     try:
             #         for label, image in visuals.items():
-            #             image_numpy = util.tensor2im(image)
+            #             image_numpy = util.tensor2im(image,label)
             #             self.vis.image(image_numpy.transpose([2, 0, 1]), opts=dict(title=label),
             #                            win=self.display_id + idx)
             #             idx += 1
@@ -157,7 +156,7 @@ class Visualizer():
             self.saved = True
             # save images to the disk
             for label, image in visuals.items():
-                image_numpy = util.tensor2im(image)
+                image_numpy = util.tensor2im(image, label)
                 img_path = os.path.join(self.img_dir, 'epoch%.3d_%s.png' % (epoch, label))
                 util.save_image(image_numpy, img_path)
 
@@ -168,7 +167,7 @@ class Visualizer():
             #     ims, txts, links = [], [], []
             #
             #     for label, image_numpy in visuals.items():
-            #         image_numpy = util.tensor2im(image)
+            #         image_numpy = util.tensor2im(image,label)
             #         img_path = 'epoch%.3d_%s.png' % (n, label)
             #         ims.append(img_path)
             #         txts.append(label)
