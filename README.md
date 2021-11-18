@@ -1,11 +1,51 @@
-# MSVCL_MICCAI2021
+### 训练生成256*256分辨率的图片参数
+	--dataroot
+	/home/zhao/mydata/datasets/mammo300/
+	--name
+	pix2pix_256
+	--model
+	pix2pix_256
+	--input_nc
+	1
+	--output_nc
+	1
+	--netD
+	n_layers
+	--n_layers_D
+	6
+	--netG
+	resnet_9blocks
+	--preprocess
+	resize
+	--no_flip
+	--crop_size
+	256
+	--batch_size
+	1
 
-## Installation
-
-Please follow the instruction in [pytorch-CycleGAN-and-pix2pix](https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix) to install.
-
-## Example Usage
-
-An example of vendor-styles transfer from **GE** style to **HOLOGIC** style is provided:
-
-python test.py --dataroot ./datasets/G/ --name G2H --model test  --input_nc 1 --output_nc 1 --preprocess none  --num_threads 4 --no_dropout --results_dir  ./datasets/ --epoch 100 --gpu_ids 0
+### 利用256的图片作为补充信息训练
+	--dataroot
+	/home/zhao/mydata/datasets/mammo300/
+	--name
+	pix2pix_add
+	--model
+	pix2pix
+	--input_nc
+	2
+	--output_nc
+	1
+	--netD
+	n_layers
+	--n_layers_D
+	6
+	--netG
+	resnet_9blocks
+	--preprocess
+	crop
+	--no_flip
+	--crop_size
+	512
+	--batch_size
+	1
+	--dataset_mode
+	add

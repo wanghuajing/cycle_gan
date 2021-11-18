@@ -83,7 +83,7 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BILINEAR, conv
     # if grayscale:
     #     transform_list.append(transforms.Grayscale(1))
     if 'resize' in opt.preprocess:
-        osize = [1024, 512]
+        osize = [256, 256]
         transform_list.append(transforms.Resize(osize, method))
     # elif 'scale_width' in opt.preprocess:
     #     transform_list.append(transforms.Lambda(lambda img: __scale_width(img, opt.load_size, opt.crop_size, method)))

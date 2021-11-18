@@ -35,12 +35,12 @@ class SingleDataset(BaseDataset):
         A_path = self.A_paths[index]
         # A_img = Image.open(A_path).convert('RGB')
         # A = self.transform(A_img)
-        A_img = Image.open(A_path).convert('I;16')
+        A_img = Image.open(A_path).convert('I')
         # apply image transformation
         A = self.transform(A_img)
         A = torch.from_numpy((np.array(A) / 65535).astype(np.float32))
         A = A.unsqueeze(0)
-        A = (A - 0.402942) / 0.130789
+        A = (A - 0.5) / 0.5
         return {'A': A, 'A_paths': A_path}
 
     def __len__(self):
