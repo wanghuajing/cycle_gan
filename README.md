@@ -5,11 +5,16 @@
     --phase选择度读取的数据集名称，默认训练为train,测试为test
     --display_freq设置生成可视化训练图片的频率
 
+#### pix2pix_add
+    通过使用add_dataset.py,input_nc==2,为每张图添加一个通道的附加信息图来训练
+
 ### 模型测试
     --name选择要使用的模型名称，--epoch选择训练的epoch数目，默认为latest最新的一个
     --phase选择度读取的数据集名称，测试一般为test
     --results_dir选择测试完的图片的存放位置
-    
+#### 亮度降低
+    暂时在dataset中将A*0.6来使原始图的亮度降低，测试模型对全局信息的敏感性
+
 ### 模型的设置
     --model可以选择使用cyclegan或者pix2pix的模型
     --input_nc选择输入的通道数目，默认为1，训练pix2pix_add为2
