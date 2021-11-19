@@ -57,6 +57,7 @@ class AlignedDataset(BaseDataset):
         A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
         B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
         A = A.unsqueeze(0)
+        A = A * 0.6
         B = B.unsqueeze(0)
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
@@ -69,4 +70,3 @@ class AlignedDataset(BaseDataset):
     def __len__(self):
         """Return the total number of images in the dataset."""
         return len(self.A_paths)
-
