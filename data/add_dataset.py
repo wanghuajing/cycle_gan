@@ -22,9 +22,8 @@ class AddDataset(BaseDataset):
         """
         BaseDataset.__init__(self, opt)
         self.add_path = opt.dataroot
-        self.A_paths = pd.read_csv(self.add_path + opt.phase + 'A.csv')
-        self.B_paths = pd.read_csv(self.add_path + opt.phase + 'B.csv')
-        self.A_add_paths = pd.read_csv(self.add_path + opt.phase + 'A_add.csv')
+        self.paths = pd.read_csv(self.add_path + opt.phase + '.csv')
+
         assert (self.opt.load_size >= self.opt.crop_size)  # crop_size should be smaller than the size of loaded image
         self.input_nc = self.opt.output_nc if self.opt.direction == 'BtoA' else self.opt.input_nc
         self.output_nc = self.opt.input_nc if self.opt.direction == 'BtoA' else self.opt.output_nc
@@ -42,13 +41,13 @@ class AddDataset(BaseDataset):
             B_paths (str) - - image paths (same as A_paths)
         """
         # read a image given a random integer index
-        A_path = self.add_path + self.A_paths['image_path'][index]
+        A_path = self.add_path + self.paths['raw'][index]
         A = Image.open(A_path).convert('I')
-        A_add_path = self.add_path + self.A_add_paths['image_path'][index]
+        A_add_path = self.add_path + self.paths['add'][index]
         A_add = Image.open(A_add_path).convert('I')
         A_add = A_add.resize(A.size, 3)
 
-        B_path = self.add_path + self.B_paths['image_path'][index]
+        B_path = self.add_path + self.paths['proc'][index]
         B = Image.open(B_path).convert('I')
         # split AB image into A and B
 
@@ -79,4 +78,4 @@ class AddDataset(BaseDataset):
 
     def __len__(self):
         """Return the total number of images in the dataset."""
-        return len(self.A_paths)
+        return len(self.paths)

@@ -286,7 +286,7 @@ def run_make_xpect_ld():
         OD_MIN = 0.2
         img_od[img_od > OD_MAX] = OD_MAX
         img_od[img_od < OD_MIN] = 0
-        img_od = cv2.resize(img_od, (256,256),interpolation=cv2.INTER_AREA)
+        img_od = cv2.resize(img_od, (256, 256), interpolation=cv2.INTER_AREA)
         cv2.imwrite(os.path.join(res_dir, '%02d.png' % (idx)), ((img_od / OD_MAX) * 65536).astype(np.uint16))
 
     return
@@ -301,9 +301,10 @@ def low2high():
     df = pd.read_csv(path + 'test.csv')
     for index, add in tqdm(df.iterrows()):
         img = Image.open(path + add['add']).convert('I')
-        img = img.resize((3328, 4096), 3) # 注意这里是裁了上下20像素边的,需要上下添加20像素补回来
+        img = img.resize((3328, 4096), 3)  # 注意这里是裁了上下20像素边的,需要上下添加20像素补回来
         # 另外,实际上hologic黑边是16像素. 因此制作裁片数据集时, 仍然需要上下裁掉20像素
         img.save(path + add['add'])
+
 
 def low2high_1():
     '''
@@ -316,10 +317,11 @@ def low2high_1():
     for path in tqdm(paths):
         basename = os.path.basename(path)
         img = cv2.imread(path, -1)
-        img = cv2.resize(img, (3328,4056), interpolation=cv2.INTER_CUBIC) # 注意这里是裁了上下20像素边的,需要上下添加20像素补回来
+        img = cv2.resize(img, (3328, 4056), interpolation=cv2.INTER_CUBIC)  # 注意这里是裁了上下20像素边的,需要上下添加20像素补回来
         # 另外,实际上hologic黑边是16像素. 因此制作裁片数据集时, 仍然需要上下裁掉20像素
         img = np.vstack((np.zeros((20, img.shape[1])), img, np.zeros((20, img.shape[1])))).astype(np.uint16)
         cv2.imwrite(os.path.join(res_dir, basename), img)
+
 
 def make_cropped_dataset_add():
     '''
@@ -394,5 +396,10 @@ if __name__ == '__main__':
     # 制作裁片数据集
     # 注意! 之后进行裁片的时候,也需要先上下裁20像素,然后再变成patch
     # 注意! 请确认裁片后的数据是对齐的!!! 要确定裁片没有随机性! 最好是读入raw, add, proc三张图,变成3通道,一起裁片!不要覆盖原来的函数!
-    make_cropped_dataset_add()
-
+    # make_cropped_dataset_add()
+    path = '/media/zhao/HD1/data/mammo300/all/'
+    df = pd.read_csv(path+'train.csv')
+    for index, iter in tqdm(df.iterrows()):
+        img=cv2.imread(path+iter['add'],-1)
+        img=img[20:-20,:]
+        cv2.imwrite(path+'cut20/'+iter['add'],img)
