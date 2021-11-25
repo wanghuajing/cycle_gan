@@ -75,3 +75,32 @@
 	--dataset_mode
 	add
 
+# 利用裁片进行pix2pix_add模型的训练
+    --dataroot
+    /media/zhao/HD1/data/mammo300/all/crop/patch_512x512_o256/
+    --name
+    pix2pix_add_unet256
+    --model
+    pix2pix
+    --input_nc
+    2
+    --output_nc
+    1
+    --netD
+    n_layers
+    --n_layers_D
+    3
+    --netG
+    unet_256
+    --preprocess
+    none
+    --no_flip
+    --num_threads
+    16
+    --batch_size
+    16
+    --gpu_ids
+    1,2
+    --dataset_mode
+    add1000
+    --shuffle

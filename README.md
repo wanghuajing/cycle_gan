@@ -35,3 +35,7 @@
 
 ### util.visualizer
     可视化工具暂时为了方便删去了大部分功能，只保留了生成realA，realB，fakeB等的图片
+
+### mammo300数据集
+    proc,raw裁切背景的乳房png图片
+    proc_all,raw_all全图的png图片
