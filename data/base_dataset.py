@@ -78,7 +78,7 @@ def get_params(opt, size):
     return {'crop_pos': (x, y), 'flip': flip}
 
 
-def get_transform(opt, params=None, grayscale=False, method=Image.BILINEAR, convert=False):
+def get_transform(opt, params=None, grayscale=False, method=Image.BILINEAR, convert=True):
     transform_list = []
     # if grayscale:
     #     transform_list.append(transforms.Grayscale(1))
@@ -94,19 +94,20 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BILINEAR, conv
         else:
             transform_list.append(transforms.Lambda(lambda img: __crop(img, params['crop_pos'], opt.crop_size)))
 
-    if opt.preprocess == 'none':
-        transform_list.append(transforms.Lambda(lambda img: __make_power_2(img, base=4, method=method)))
-
     if not opt.no_flip:
         if params is None:
             transform_list.append(transforms.RandomHorizontalFlip())
         elif params['flip']:
             transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
 
+    if opt.preprocess == 'none':
+        transform_list.append(transforms.Lambda(lambda img: __pad_power_2(img, netG=opt.netG)))
+
     if convert:
         transform_list += [transforms.ToTensor()]
+
         # if grayscale:
-        transform_list += [transforms.Normalize((0.5,), (0.5,))]
+        # transform_list += [transforms.Normalize((0.5,), (0.5,))]
         # else:
         #     transform_list += [transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
     return transforms.Compose(transform_list)
@@ -121,6 +122,25 @@ def __make_power_2(img, base, method=Image.BICUBIC):
 
     __print_size_warning(ow, oh, w, h)
     return img.resize((w, h), method)
+
+
+def __pad_power_2(img, netG):
+    if netG == 'unet_256':
+        base = 256
+    elif netG == 'unet128':
+        base = 128
+    else:
+        base = 8
+
+    ow, oh = img.size
+    h = int(np.ceil(oh / base) * base)
+    w = int(np.ceil(ow / base) * base)
+    if h == oh and w == ow:
+        return img
+
+    __print_size_warning(ow, oh, w, h)
+
+    return transforms.Pad(padding=[0, 0, w - ow, h - oh], fill=0, padding_mode='constant')(img)
 
 
 def __scale_width(img, target_size, crop_size, method=Image.BICUBIC):

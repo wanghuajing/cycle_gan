@@ -388,7 +388,7 @@ if __name__ == '__main__':
     # make_cropped_dataset()
 
     # 河南数据转换为第分辨率od
-    # run_make_xpect_ld()
+    run_make_xpect_ld()
 
     # 将低分辨率图上采样到原始分辨率.注意!!!这个是上下20像素裁掉的. 需要resize到(4056,3328),然后上下补20像素
     # low2high_1()
@@ -397,9 +397,9 @@ if __name__ == '__main__':
     # 注意! 之后进行裁片的时候,也需要先上下裁20像素,然后再变成patch
     # 注意! 请确认裁片后的数据是对齐的!!! 要确定裁片没有随机性! 最好是读入raw, add, proc三张图,变成3通道,一起裁片!不要覆盖原来的函数!
     # make_cropped_dataset_add()
-    path = '/media/zhao/HD1/data/mammo300/all/'
-    df = pd.read_csv(path+'train.csv')
-    for index, iter in tqdm(df.iterrows()):
-        img=cv2.imread(path+iter['add'],-1)
-        img=img[20:-20,:]
-        cv2.imwrite(path+'cut20/'+iter['add'],img)
+    # path = '/media/zhao/HD1/data/mammo300/all/'
+    # df = pd.read_csv(path+'train.csv')
+    # for index, iter in tqdm(df.iterrows()):
+    #     img=cv2.imread(path+iter['add'],-1)
+    #     img=img[20:-20,:]
+    #     cv2.imwrite(path+'cut20/'+iter['add'],img)

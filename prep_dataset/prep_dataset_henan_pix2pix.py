@@ -233,9 +233,9 @@ def make_cropped_dataset():
     os.makedirs(os.path.join(res_root_dir, 'raw'), exist_ok=True)
     os.makedirs(os.path.join(res_root_dir, 'add'), exist_ok=True)
 
-    df=pd.read_csv('/media/zhao/HD1/data/mammo300/all/train.csv')
+    df = pd.read_csv('/media/zhao/HD1/data/mammo300/all/train.csv')
     for index, proc_path in tqdm(df.iterrows()):
-        proc_path=proc_dir+proc_path['proc']
+        proc_path = proc_dir + proc_path['proc']
         basename = os.path.basename(proc_path)
         basename = basename.rstrip('.png')
 
@@ -329,7 +329,14 @@ if __name__ == '__main__':
     # make_pix2pix_dataset()
 
     # 制作裁片数据集
-    make_cropped_dataset()
+    # make_cropped_dataset()
 
     # 河南数据转换为第分辨率od
     # run_make_xpect_ld()
+    path = '/media/zhao/HD1/data/ai-postprocess/mammo300_png/demo/'
+    df = pd.read_csv(path + 'test.csv')
+    for index, item in df.iterrows():
+        od = cv2.imread(path + item['od'], -1)
+        new = cv2.imread(path + item['new'], -1)
+        new = cv2.resize(new, (od.shape[1], od.shape[0]), interpolation=cv2.INTER_CUBIC)
+        cv2.imwrite('/media/zhao/HD1/data/ai-postprocess/mammo300_png/demo2/' + item['new'], new)

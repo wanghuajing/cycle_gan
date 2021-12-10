@@ -5,6 +5,7 @@ from PIL import Image
 import pandas as pd
 import numpy as np
 import torch
+import sklearn
 
 
 class Add1000Dataset(BaseDataset):
@@ -23,7 +24,7 @@ class Add1000Dataset(BaseDataset):
         BaseDataset.__init__(self, opt)
         self.add_path = opt.dataroot
         self.paths = pd.read_csv(self.add_path + opt.phase + '.csv')
-        self.paths = self.paths.sample(frac=1).reset_index(drop=True)
+        self.paths = sklearn.utils.shuffle(self.paths).reset_index(drop=True)
         self.paths = self.paths.iloc[:1000, :]
         assert (self.opt.load_size >= self.opt.crop_size)  # crop_size should be smaller than the size of loaded image
         self.input_nc = self.opt.output_nc if self.opt.direction == 'BtoA' else self.opt.input_nc
@@ -59,13 +60,10 @@ class Add1000Dataset(BaseDataset):
         A = A_transform(A)
         A_add = A_transform(A_add)
         B = B_transform(B)
-        A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
-        A_add = torch.from_numpy((np.array(A_add) / 65535.0).astype(np.float32))
-        B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
+        A = A / 65535.0
+        A_add = A_add / 65535.0
+        B = B / 65535.0
 
-        A = A.unsqueeze(0)
-        A_add = A_add.unsqueeze(0)
-        B = B.unsqueeze(0)
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
         # B = (B - 0.304032) / 0.182379

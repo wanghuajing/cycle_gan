@@ -59,13 +59,13 @@ class AddDataset(BaseDataset):
         A = A_transform(A)
         A_add = A_transform(A_add)
         B = B_transform(B)
-        A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
-        A_add = torch.from_numpy((np.array(A_add) / 65535.0).astype(np.float32))
-        B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
+        A = A / 65535.0
+        A_add = A_add / 65535.0
+        B = B / 65535.0
 
-        A = A.unsqueeze(0)
-        A_add = A_add.unsqueeze(0)
-        B = B.unsqueeze(0)
+        # A = A.unsqueeze(0)
+        # A_add = A_add.unsqueeze(0)
+        # B = B.unsqueeze(0)
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
         # B = (B - 0.304032) / 0.182379

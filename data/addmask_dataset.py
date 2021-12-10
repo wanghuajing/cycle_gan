@@ -7,7 +7,7 @@ import numpy as np
 import torch
 
 
-class AlignedDataset(BaseDataset):
+class AddmaskDataset(BaseDataset):
     """A dataset class for paired image dataset.
 
     It assumes that the directory '/path/to/data/train' contains image pairs in the form of {A,B}.
@@ -22,9 +22,8 @@ class AlignedDataset(BaseDataset):
         """
         BaseDataset.__init__(self, opt)
         self.add_path = opt.dataroot
-        # self.A_paths = pd.read_csv(self.add_path + opt.phase + 'A.csv')
-        # self.B_paths = pd.read_csv(self.add_path + opt.phase + 'B.csv')
         self.paths = pd.read_csv(self.add_path + opt.phase + '.csv')
+
         assert (self.opt.load_size >= self.opt.crop_size)  # crop_size should be smaller than the size of loaded image
         self.input_nc = self.opt.output_nc if self.opt.direction == 'BtoA' else self.opt.input_nc
         self.output_nc = self.opt.input_nc if self.opt.direction == 'BtoA' else self.opt.output_nc
@@ -44,6 +43,12 @@ class AlignedDataset(BaseDataset):
         # read a image given a random integer index
         A_path = self.add_path + self.paths['raw'][index]
         A = Image.open(A_path).convert('I')
+        A_add_path = self.add_path + self.paths['add'][index]
+        A_add = Image.open(A_add_path).convert('I')
+        A_add = A_add.resize(A.size, 3)
+        A_mask_path = self.add_path + self.paths['mask'][index]
+        A_mask = Image.open(A_mask_path).convert('I')
+
         B_path = self.add_path + self.paths['proc'][index]
         B = Image.open(B_path).convert('I')
         # split AB image into A and B
@@ -54,15 +59,19 @@ class AlignedDataset(BaseDataset):
         B_transform = get_transform(self.opt, transform_params, grayscale=(self.output_nc == 1))
 
         A = A_transform(A)
+        A_add = A_transform(A_add)
+        A_mask = A_transform(A_mask)
         B = B_transform(B)
-        A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
-        B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
-        A = A.unsqueeze(0)
-        B = B.unsqueeze(0)
+        A = A / 65535.0
+        A_add = A_add / 65535.0
+        A_mask = A_mask / 65535.0
+        B = B / 65535.0
+
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
         # B = (B - 0.304032) / 0.182379
-        ##  for OD dataset   # mu = 0.31534294651712824 std = 0.08676279850461585
+
+        A = torch.cat((A, A_add, A_mask), 0)
         A = (A - 0.5) / 0.5
         B = (B - 0.5) / 0.5
 

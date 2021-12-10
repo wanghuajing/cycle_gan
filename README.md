@@ -1,7 +1,8 @@
 ### 模型训练
     --checkpoint设置模型的保存地址，--name设置名称，--save_epoch_freq设置保存频率
     --continue_train可以继续训练，默认从同名模型的上一个latest_net_G.pth和latest_net_D.pth
-    上继续继续训练,--epoch_count设置继续训练的当前epoch编号
+    上继续继续训练
+    --epoch_count设置继续训练的当前epoch编号
     --phase选择度读取的数据集名称，默认训练为train,测试为test
     --display_freq设置生成可视化训练图片的频率
 
@@ -26,12 +27,16 @@
     mammo300中的数据为但通道的16bit的图
     训练caclegan默认使用unaligned_dataset.py,产生不成对的图片，
     训练pix2pix默认使用aligned_dataset.py，产生成对的图片，也可以用--dataset_mode特别指定训练所使用的dataset
-    --dataroot指向的是数据的csv文件的地址，数据集划分为trainA.csv、trainB.csv、testA.csv、testB.csv，csv为
-    单列，列名为image_path,内容为所指向图片的相对地址。对于mammo300数据集训练集和测试集为1000：240
+    --dataroot指向的是数据的csv文件的地址，数据集划分为train.csv、test.csv，csv为
+    多列，列名为raw,proc,add等,通过列名选取不同数据集,内容为所指向图片的相对地址。对于mammo300数据集训练集和测试集为1000：240
+    --add_dataset:为每张图片添加一张全局转换图片作为附加信息
+    --add1000_dataset:使用 裁片删去背景的数据集,每个epoch设置为1000张
+    在transform里面添加了__pad_power_2方法替代resize
 
 ### 数据处理
     --preprocess中可以设置resize和crop等操作
     --loadsize设置resize的大小，--crop设置裁片的大小
+    U-net256需要图片resize成256的倍数
 
 ### util.visualizer
     可视化工具暂时为了方便删去了大部分功能，只保留了生成realA，realB，fakeB等的图片
