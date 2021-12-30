@@ -36,7 +36,7 @@
 ### 数据处理
     --preprocess中可以设置resize和crop等操作
     --loadsize设置resize的大小，--crop设置裁片的大小
-    U-net256需要图片resize成256的倍数
+    U-net256需要图片需要reflect padding成256的倍数
 
 ### util.visualizer
     可视化工具暂时为了方便删去了大部分功能，只保留了生成realA，realB，fakeB等的图片

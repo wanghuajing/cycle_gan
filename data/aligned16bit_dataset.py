@@ -40,7 +40,7 @@ class Aligned16bitDataset(BaseDataset):
             B_paths (str) - - image paths (same as A_paths)
         """
         # read a image given a random integer index
-        A_path = self.add_path + self.paths['od'][index]
+        A_path = self.add_path + self.paths['raw'][index]
         A = Image.open(A_path).convert('I')
         B_path = self.add_path + self.paths['proc'][index]
         B = Image.open(B_path).convert('I')
@@ -53,16 +53,17 @@ class Aligned16bitDataset(BaseDataset):
 
         A = A_transform(A)
         B = B_transform(B)
+        # 随机乘 [0.8 1.2]
         A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
         B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
-        A = A.unsqueeze(0)
-        B = B.unsqueeze(0)
+        # A = A.unsqueeze(0)
+        # B = B.unsqueeze(0)
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
         # B = (B - 0.304032) / 0.182379
         ##  for OD dataset   # mu = 0.31534294651712824 std = 0.08676279850461585
-        # A = (A - 0.5) / 0.5
-        A = (A - 0.31534) / 0.08676
+        A = (A - 0.5) / 0.5
+        # A = (A - 0.31534) / 0.08676
         B = (B - 0.5) / 0.5
 
         return {'A': A, 'B': B, 'A_paths': A_path, 'B_paths': B_path}

@@ -125,13 +125,16 @@ def __make_power_2(img, base, method=Image.BICUBIC):
 
 
 def __pad_power_2(img, netG):
-    if netG == 'unet_256':
-        base = 256
-    elif netG == 'unet128':
+    if netG == 'unet_128':
         base = 128
+    elif netG == 'unet_256':
+        base = 256
+    elif netG == 'unet_512':
+        base = 512
+    elif netG == 'unet_1024':
+        base = 1024
     else:
         base = 8
-
     ow, oh = img.size
     h = int(np.ceil(oh / base) * base)
     w = int(np.ceil(ow / base) * base)
@@ -140,7 +143,7 @@ def __pad_power_2(img, netG):
 
     __print_size_warning(ow, oh, w, h)
 
-    return transforms.Pad(padding=[0, 0, w - ow, h - oh], fill=0, padding_mode='constant')(img)
+    return transforms.Pad(padding=[0, 0, w - ow, h - oh], fill=0, padding_mode='reflect')(img)
 
 
 def __scale_width(img, target_size, crop_size, method=Image.BICUBIC):

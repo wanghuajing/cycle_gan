@@ -139,7 +139,7 @@
     --direction
     AtoB
 
-### 如上方法在全图萨和嗯训练,不提前裁片,会有大量的黑色背景
+### 如上方法在全图上训练,不提前裁片,会有大量的黑色背景
     --dataroot
     /media/zhao/HD1/data/ai-postprocess/mammo300_png/full_cut20/
     --name
