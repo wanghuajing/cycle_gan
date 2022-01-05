@@ -99,6 +99,9 @@ def get_transform(opt, params=None, grayscale=False, method=Image.BILINEAR, conv
             transform_list.append(transforms.RandomHorizontalFlip())
         elif params['flip']:
             transform_list.append(transforms.Lambda(lambda img: __flip(img, params['flip'])))
+    # 随机改变图片亮度
+    # if opt.brightness:
+    #     transform_list.append(transforms.ColorJitter(brightness=0.2))
 
     if opt.preprocess == 'none':
         transform_list.append(transforms.Lambda(lambda img: __pad_power_2(img, netG=opt.netG)))

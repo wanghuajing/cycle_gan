@@ -53,11 +53,11 @@ class Aligned16bitDataset(BaseDataset):
 
         A = A_transform(A)
         B = B_transform(B)
-        # 随机乘 [0.8 1.2]
         A = torch.from_numpy((np.array(A) / 65535.0).astype(np.float32))
         B = torch.from_numpy((np.array(B) / 65535.0).astype(np.float32))
-        # A = A.unsqueeze(0)
-        # B = B.unsqueeze(0)
+        # 随机乘 [0.8 1.2]
+        if self.opt.brightness:
+            A = A * (np.random.rand() * 0.4 + 0.8)
         # 将A,B数据集分别标准化
         # A = (A - 0.402942) / 0.130789
         # B = (B - 0.304032) / 0.182379

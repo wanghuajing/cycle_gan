@@ -138,6 +138,7 @@
     200
     --direction
     AtoB
+    --eval
 
 ### 如上方法在全图上训练,不提前裁片,会有大量的黑色背景
     --dataroot
